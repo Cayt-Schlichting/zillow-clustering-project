@@ -5,6 +5,8 @@ import pandas as pd
 ### count_nulls(df,by_column=True)
 ### handle_missing_values(df, prop_req_col=.75, prop_req_row=.75)
 
+# Improvements to make
+# 1) needs to be restructured to better handle lots of rows or columns (takes to long to run)
 def count_nulls(df,by_column=True):
     ''''
     Finds number and percentage of nulls by column or by row

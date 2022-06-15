@@ -1,11 +1,13 @@
-# Project Title
-*Audience: Target audience for my final report is*
+# Investigating Zestimate Errors
+*Audience: Target audience for my final report is a data science team*
 
 
 <hr style="background-color:silver;height:3px;" />
 
 ## Project Summary
 <hr style="background-color:silver;height:3px;" />
+
+The goal of this project is to identify drivers of error in zestimate.  Understanding when the zestimate is likely to be less reliable will help us to develop better models for those situations.
 
 ### Project Deliverables
 > - A final report notebook
