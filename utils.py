@@ -1,5 +1,49 @@
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
+
+###### SCALE FUNCTION ######
+def scale_X(X_tr,X_te,X_val,columns,kind='minmax'):
+    '''
+    Takes prepped tr, test, validate zillow subsets. Scales the list of columns provided\
+      returns dataframes concated <scaled><unscaled>.  
+      
+    Returns: 3 Pandas DataFrames (Train, Test, Validate)
+    Inputs:
+         (R) X_tr: train dataset
+         (R) X_te: test dataset
+        (R) X_val: validate dataset
+      (R) columns: List of columns to be scaled
+      (O-kw) kind: Type of scaler you want to use.  Default: minmax
+                Options: minmax, standard, robust
+    '''
+    #Set the scaler 
+    if kind.lower() == 'minmax':
+        scaler = MinMaxScaler()
+    elif kind.lower() == 'standard':
+        scaler = StandardScaler()
+    elif kind.lower() == 'robust':
+        scaler = RobustScaler()
+    else:
+        print(f'Invalid entry for "kind", default MinMax scaler used')
+        scaler = MinMaxScaler()
+
+    #fit scaler and transform on train - needs to be stored as pd.DF in order to concat
+    X_tr_scaled = pd.DataFrame(scaler.fit_transform(X_tr[columns]),columns=columns,index=X_tr.index)
+    #transform the rest
+    X_te_scaled = pd.DataFrame(scaler.transform(X_te[columns]),columns=columns,index=X_te.index)
+    X_val_scaled = pd.DataFrame(scaler.transform(X_val[columns]),columns=columns,index=X_val.index)
+
+    #rebuild the dataframes <scaled><unscaled>
+    X_tr_scaled = pd.concat([X_tr_scaled,X_tr.drop(columns=columns)],axis=1)
+    X_te_scaled = pd.concat([X_te_scaled,X_te.drop(columns=columns)],axis=1)
+    X_val_scaled = pd.concat([X_val_scaled,X_val.drop(columns=columns)],axis=1)
+    
+    #return dataframes with scaled data
+    return X_tr_scaled, X_te_scaled, X_val_scaled
+
+##################################
+##################################
 
 ###### NULL FUNCTIONS #####
 ### count_nulls(df,by_column=True)
@@ -70,7 +114,7 @@ def handle_missing_values(df, prop_req_col=.75, prop_req_row=.75):
     return df
 
 ##################################
-##################################
+# #################################
 
 
 
@@ -190,4 +234,4 @@ def handle_iqr_outliers(old_df,trim=False,include=None,exclude=None):
         
     return df
 ##################################
-##################################
+# #################################

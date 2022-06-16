@@ -67,10 +67,10 @@ def getZillowData():
     return df
 
 ##################################
-##################################
+# #################################
 
 #############################
-##### DATA PREPARATION ######
+# #### DATA PREPARATION ######
 
 def only_single_unit(df):
     '''
@@ -97,6 +97,30 @@ def map_encode_zillow_fips(df):
     df.drop(columns=['fips'],inplace=True)
     return df
 
+def splitData(df,**kwargs):
+    """
+    Splits data into three dataframes
+    Returns: 3 dataframes in order of train, test, validate
+    Inputs:
+      (R)             df: Pandas dataframe to be split
+      (O -kw)  val_ratio: Proportion of the whole dataset wanted for the validation subset (b/w 0 and 1). Default .2 (20%)
+      (O -kw) test_ratio: Proportion of the whole dataset wanted for the test subset (b/w 0 and 1). Default .1 (10%)
+    """
+    #Pull keyword arguments and set test and validation percentages of WHOLE dataset 
+    val_per = kwargs.get('val_ratio',.2)
+    test_per = kwargs.get('test_ratio',.1)
+
+    #Calculate percentage we need of test/train subset
+    tt_per = test_per/(1-val_per)
+
+    #Split validate dataset off
+    #returns train then test, so test_size is the second set it returns
+    tt, validate = train_test_split(df, test_size=val_per,random_state=88)
+    #now split tt in train and test 
+    train, test = train_test_split(tt, test_size=tt_per, random_state=88)
+    
+    return train, test, validate
+
 def prep_zillow(df):
     '''
     This function takes in a zillow dataframe and prepares it for exploratory analysis.
@@ -105,11 +129,11 @@ def prep_zillow(df):
     df = only_single_unit(df)
     
     #NULLS: filter down null-heavy columns, then drop rows with nulls
-    df = handle_missing_values(df,prop_req_col=.98,prop_req_row=1)
+    df = utils.handle_missing_values(df,prop_req_col=.98,prop_req_row=1)
     
     #DROP remaining columns I don't want - do geographic columns separately to easily change
-    drp_cols = ['propertylandusetypeid', 'finishedsquarefeet12', 'structuretaxvaluedollarcnt',\
-                'assessmentyear','landtaxvaluedollarcnt', 'taxamount']
+    drp_cols = ['propertylandusetypeid', 'finishedsquarefeet12', 'structuretaxvaluedollarcnt','calculatedbathnbr',\
+                'assessmentyear','landtaxvaluedollarcnt', 'taxamount','propertycountylandusecode']
     drp_geo_cols = ['regionidcity','regionidcounty', 'regionidzip','rawcensustractandblock','censustractandblock']
     df.drop(columns=(drp_cols+drp_geo_cols), inplace=True)
 #     df.drop(columns=drp_geo_cols, inplace=True)
@@ -127,26 +151,42 @@ def prep_zillow(df):
     
     #MAP and ENCODE fips
     df = map_encode_zillow_fips(df)
-    
+
+    #ENCODE landusedesc
+    #encode into dummy df
+    d_df = pd.get_dummies(df['propertylandusedesc'],drop_first=True)
+    #concat dummy df to the rest
+    df = pd.concat([df,d_df],axis=1)
+
     #TRIM IQR outliers
-    iqr_trim_cols = ['bedroomcnt','calculatedbathnbr','calculatedfinishedsquarefeet', 'taxvaluedollarcnt','logerror']
+    iqr_trim_cols = ['bedroomcnt','bathroomcnt','calculatedfinishedsquarefeet', 'taxvaluedollarcnt','logerror']
     df = utils.handle_iqr_outliers(df,trim=True,include=iqr_trim_cols)
     
     #RENAME columns
     rename_cols = {
         'bedroomcnt':'bed',
         'bathroomcnt':'bath',
-        'calculatedbathnbr':'calcbath',
         'calculatedfinishedsquarefeet':'sf',
         'latitude': 'lat',
         'longitude':'lon',
-        'propertycountylandusecode':'countylanduse',
         'propertylandusedesc':'landusedesc',
         'taxvaluedollarcnt':'value'
     }
     df.rename(columns=rename_cols,inplace=True)
     
     return df    
+
+def wrangle_zillow(**kwargs):
+    '''
+    Acquires, preps and splits zillow data.  Can pass in val_ratio or test_ratio for splitting
+    '''
+    #acquire data
+    df = getZillowData()
+    #prep data
+    df = prep_zillow(df)
+    #split data
+    train, test, validate = splitData(df,**kwargs)
     
+    return train, test, validate    
 ##################################
-##################################
+# #################################
