@@ -234,4 +234,38 @@ def handle_iqr_outliers(old_df,trim=False,include=None,exclude=None):
         
     return df
 ##################################
-# #################################
+##################################
+
+##### STATS FUNCTION ####
+def stats_result(p,null_h,**kwargs):
+    """
+    Compares p value to alpha and outputs whether or not the null hypothesis
+    is rejected or if it failed to be rejected.
+    DOES NOT HANDLE 1-TAILED T TESTS
+    
+    Required inputs:  p, null_h (str)
+    Optional inputs: alpha (default = .05), chi2, r, t
+    
+    """
+    #Get alpha value - Default to .05 if not provided
+    alpha=kwargs.get('alpha',.05)
+    #get any additional statistical values passed (for printing)
+    t=kwargs.get('t',None)
+    r=kwargs.get('r',None)
+    chi2=kwargs.get('chi2',None)
+    corr=kwargs.get('corr',None)
+    
+    #Print null hypothesis
+    print(f'\n\033[1mH\u2080:\033[0m {null_h}')
+    #Test p value and print result
+    if p < alpha: print(f"\033[1mWe reject the null hypothesis\033[0m, p = {p} | α = {alpha}")
+    else: print(f"We failed to reject the null hypothesis, p = {p} | α = {alpha}")
+    #Print any additional values for reference
+    if 't' in kwargs: print(f'  t: {t}')
+    if 'r' in kwargs: print(f'  r: {r}')
+    if 'chi2' in kwargs: print(f'  chi2: {chi2}')
+    if 'corr' in kwargs: print(f'  corr: {corr}')
+
+    return None
+##################################
+##################################

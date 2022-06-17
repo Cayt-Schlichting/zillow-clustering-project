@@ -29,8 +29,9 @@ def getNewZillowData():
     filename='zillow.csv'
     sql = """
     SELECT *
-    FROM properties_2017
-        JOIN predictions_2017 USING(parcelid)
+    FROM (SELECT max(transactiondate) AS transactiondate, parcelid FROM predictions_2017 GROUP BY parcelid) as T1
+        JOIN predictions_2017 USING(transactiondate, parcelid)
+        JOIN properties_2017 USING(parcelid)
         LEFT JOIN airconditioningtype USING(airconditioningtypeid)
         LEFT JOIN architecturalstyletype USING(architecturalstyletypeid)
         LEFT JOIN buildingclasstype USING(buildingclasstypeid)
