@@ -1,6 +1,13 @@
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
+from math import sqrt
+from sklearn.metrics import mean_squared_error
+
+
+
+def rmse(y,yhat):
+    return sqrt(mean_squared_error(y,yhat))
 
 ###### SCALE FUNCTION ######
 def scale_X(X_tr,X_te,X_val,columns,kind='minmax'):

@@ -61,14 +61,27 @@ The goal of this project is to identify drivers of error in zestimate.  Understa
 
 |Target|Definition|
 |:-------|:----------|
-| Target | Definition|
+| logerror | log(zestimate) - log(actual value)|
 
 |Feature|Definition|
 |:-------|:----------|
-| Feature       | Definition |
-| Feature        | Definition |
-| Feature       | Definition |
-| Feature        | Definition 
+| bedroomcnt (bed)       | Number of bedrooms in the home |
+| bathroomcnt (bath)        | Number of bathrooms in home, including fractional bathrooms |
+| calculatedfinishedsquarefeet (sf)|  Calculated total finished living area of the home  |
+| fips (county)|  Federal Information Processing Standard code -  see https://en.wikipedia.org/wiki/FIPS_county_code for more details |
+| fullbathcnt | Number of full bathrooms (sink + shower + bathtub + toilet) |
+| latitude        |  Latitude of the middle of the parcel multiplied by 10e6 |
+| longitude       |  Longitude of the middle of the parcel multiplied by 10e6 |
+| parcelid        | Unique identifier for parcels |
+| propertylandusetypedesc|  Type of land use the property is zoned for |
+| roomcnt |  Total number of rooms in the principal residence |
+| unitcnt |  Number of units the structure is built into (i.e. 2 = duplex, 3 = triplex, etc...) |
+| yearbuilt |  The Year the principal residence was built |
+|taxvaluedollarcnt|The total tax assessed value of the parcel|
+|trans_month|Month of the parcel's transaction|
+
+
+
 
 
 <hr style="background-color:silver;height:3px;" />
