@@ -19,9 +19,9 @@ The goal of this project is to identify drivers of error in zestimate.  Understa
 
 ### Initial questions on the data
 
->  - Questions
->  - Thoughts
->  - etc
+>  - Is logerror worse at the lowest and highest home values?
+>  - Is logerror influenced by geography?
+>  - Will transaction month have a small affect on logerror?
 
 ### Project Plan 
 
@@ -43,16 +43,6 @@ The goal of this project is to identify drivers of error in zestimate.  Understa
    - [ ] Initial Hypothesis
    - [ ] Executive Summary
 ---
-
-<hr style="background-color:silver;height:3px;" />
-
-## Executive Summary
-<hr style="background-color:silver;height:3px;" />
-
-**Project Goal:**
-
-**Discoveries and Recommendations**
-
 
 <hr style="background-color:silver;height:3px;" />
 
@@ -79,10 +69,6 @@ The goal of this project is to identify drivers of error in zestimate.  Understa
 | yearbuilt |  The Year the principal residence was built |
 |taxvaluedollarcnt|The total tax assessed value of the parcel|
 |trans_month|Month of the parcel's transaction|
-
-
-
-
 
 <hr style="background-color:silver;height:3px;" />
 
